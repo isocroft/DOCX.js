@@ -65,17 +65,22 @@ function convertContent(input) { 'use strict'; // Convert HTML to Wordprocessing
 		output = output.childNodes;
 	}
 	else if (input.nodeName) { // input is HTML DOM
+		/*!
+		 * Corrective updates made to this file
+		 * See: https://stackoverflow.com/questions/15899883/generate-a-word-document-in-javascript-with-docx-js/
+		 */
 		doc = new DOMParser().parseFromString('<root></root>', 'text/xml')
 		doc.getElementsByTagName('root')[0].appendChild(newXMLnode('body'));
 		output = doc.getElementsByTagName('w:body')[0];
 		for (i = 0; inNode = input.childNodes[i]; i++) {
 			outNode = output.appendChild(newXMLnode('p'));
 			pCount++;
-			if (inNode.style.textAlign) { outNode.appendChild(newXMLnode('pPr')).appendChild(newXMLnode('jc')).setAttribute('val', inNode.style.textAlign); }
+			if (inNode.style && inNode.style.textAlign) { outNode.appendChild(newXMLnode('pPr')).appendChild(newXMLnode('jc')).setAttribute('val', inNode.style.textAlign); }
 			if (inNode.nodeName === '#text') { outNode.appendChild(newXMLnode('r')).appendChild(newXMLnode('t', inNode.nodeValue)); }
 			else {
 				for (j = 0; inNodeChild = inNode.childNodes[j]; j++) {
 					outNodeChild = outNode.appendChild(newXMLnode('r'));
+					if(inNodeChild.nodeName === '#comment') continue;
 					if (inNodeChild.nodeName !== '#text') {
 						styleAttrNode = outNodeChild.appendChild(newXMLnode('rPr'));
 						tempStr = inNodeChild.outerHTML;
