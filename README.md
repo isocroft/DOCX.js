@@ -18,7 +18,7 @@ DOCX.js is a JavaScript library for converting the data in base64 DOCX files int
 
   var result = docx({DOM: $('#doc_html_editor').find('[contenteditable]').get(0) });
   var blob = b64toBlob(result.base64, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-  ssaveAs(blob, "test.docx");
+  saveAs(blob, "test.docx");
 
 ```
 
